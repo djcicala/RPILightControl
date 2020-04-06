@@ -16,7 +16,7 @@ public class BluetoothMessageClass
 {
     List<ColorStruct> colors;          // list of colors (ColorStruct has RGB fields)
     String lightType;                  // light type (solid, pulse, wheel)
-    int frequency;                     // frequency of the light pulse (1-10 hz)
+    double frequency;                     // frequency of the light pulse (1-10 hz)
     String direction;                  // direction for the lights to travel (if shift)
     int numLEDs, numColors;            // number of LEDs and number of colors currently stored
     String stringToTransmit;           // assembled csv string to send
@@ -25,13 +25,11 @@ public class BluetoothMessageClass
     public BluetoothMessageClass()
     {
         this.colors = new ArrayList<ColorStruct>();
+        this.numLEDs   = 0;
+        this.numColors = 0;
+        this.frequency = 0;
 
-        this.lightType = "solid";
-        this.direction = "left";
-        this.numLEDs   = 3;
-        this.numColors = 1;
-
-        ConstructCSVStr();
+        //ConstructCSVStr();
     }
 
     /* adds an RGB color to the list of colors */
@@ -39,7 +37,7 @@ public class BluetoothMessageClass
     {
         ColorStruct localColor = new ColorStruct(r, g, b);
         this.colors.add(localColor);
-
+        this.numColors++;
     }
 
     /* sets the light type for a given input */
@@ -60,18 +58,32 @@ public class BluetoothMessageClass
         this.direction = direction;
     }
 
+    /* sets the direction of the LEDs for a given input */
+    public void SetFrequency(double frequency)
+    {
+        this.frequency = frequency;
+    }
+
     /* builds a CSV string based on whats currently stored in this class */
-    private void ConstructCSVStr()
+    public void ConstructCSVStr()
     {
         /* first clear the old string */
         this.stringToTransmit = "";
 
         /* then assign the new values */
-        this.stringToTransmit = this.lightType + ";" + this.direction + ";" + String.valueOf(this.numLEDs) + ";" + String.valueOf(this.colors.size()) + ";";
-        /* loop over all colors, adding each RGB to the CSV string */
-        for(int i =0; i < this.colors.size(); i++)
+        this.stringToTransmit = this.lightType + ";" + String.valueOf(this.numLEDs) + ";" + String.valueOf(this.frequency) + ";";
+
+        if(numColors == 0)
         {
-            this.stringToTransmit += String.valueOf(this.colors.get(i).r) + "," + String.valueOf(this.colors.get(i).g) + "," + String.valueOf(this.colors.get(i).b) + ";";
+            this.stringToTransmit += "0,0,0;";
+        }
+        else
+        {
+            /* loop over all colors, adding each RGB to the CSV string */
+            for(int i =0; i < this.colors.size(); i++)
+            {
+                this.stringToTransmit += String.valueOf(this.colors.get(i).r) + "," + String.valueOf(this.colors.get(i).g) + "," + String.valueOf(this.colors.get(i).b) + ";";
+            }
         }
 
         this.stringToTransmit += "\n";

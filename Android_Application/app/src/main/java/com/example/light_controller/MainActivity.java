@@ -32,21 +32,23 @@ public class MainActivity extends AppCompatActivity
 {
 
     /* layout objects */
-    SeekBar redSlider;                        // red slider (R of RGB, range 0-255)
-    SeekBar greenSlider;                      // green slider (G of RGB, range 0-255)
-    SeekBar blueSlider;                       // blue slider (b of RGB range 0-255)
-    Button  addColorButton;                   // button to add the color to the current list
-    Spinner lightTypeSpinner;                 // dropdown to determine what kind of light to show (solid, pulse, shift)
-    Spinner frequencySpinner;                 // dropdown to determine what frequency to use (1-10 Hz range)
-    Spinner numLEDSpinner;                    // number of LEDs for each color in the sequence
-    Button  sendToRPIButton;                  // button to send the data over bluetooth to the raspberry pi
+    SeekBar  redSlider;                        // red slider (R of RGB, range 0-255)
+    SeekBar  greenSlider;                      // green slider (G of RGB, range 0-255)
+    SeekBar  blueSlider;                       // blue slider (b of RGB range 0-255)
+    Button   addColorButton;                   // button to add the color to the current list
+    Spinner  lightTypeSpinner;                 // dropdown to determine what kind of light to show (solid, pulse, shift)
+    Spinner  frequencySpinner;                 // dropdown to determine what frequency to use (1-10 Hz range)
+    Spinner  numLEDSpinner;                    // number of LEDs for each color in the sequence
+    Button   sendToRPIButton;                  // button to send the data over bluetooth to the raspberry pi
+    Button[] colorButtons = new Button[4];     // list of buttons to assign colors to
+    Button   cancelButton;                     // button to clear the current configuration
 
     /* bluetooth communication objects */
     BluetoothMessageClass bluetoothMessage;   // container class to store all of the relevant fields of the bluetooth message
     BluetoothSocket socket;                   // global bluetooth socket
     public OutputStream outputStream;         // outgoing stream, for sending data TO the pi
     public InputStream inStream;              // incoming stream, for receiving data FROM the pi
-    int raspberryPiIndex = 6;                 // index of the raspberry pi in the "paired devices" section of your phone
+    int raspberryPiIndex = 0;                 // index of the raspberry pi in the "paired devices" section of your phone
 
 
     /*************************************************************************/
@@ -71,6 +73,13 @@ public class MainActivity extends AppCompatActivity
         frequencySpinner = (Spinner) findViewById(R.id.frequencySpinner);
         numLEDSpinner    = (Spinner) findViewById(R.id.numberLEDs);
 
+        colorButtons[0] = (Button) findViewById(R.id.color1);
+        colorButtons[1] = (Button) findViewById(R.id.color2);
+        colorButtons[2] = (Button) findViewById(R.id.color3);
+        colorButtons[3] = (Button) findViewById(R.id.color4);
+        cancelButton    = (Button) findViewById(R.id.cancelButton);
+
+
         /* create a new instance of the bluetooth message on startup */
         bluetoothMessage = new BluetoothMessageClass();
 
@@ -91,11 +100,14 @@ public class MainActivity extends AppCompatActivity
         blueSlider.setOnSeekBarChangeListener(localSeekBarListener);
 
         /* add color button press configuration  */
-        AddColorButtonListener localButtonListener = new AddColorButtonListener(redSlider, greenSlider, blueSlider, bluetoothMessage);
+        AddColorButtonListener localButtonListener = new AddColorButtonListener(redSlider, greenSlider, blueSlider, bluetoothMessage, colorButtons, this.getApplicationContext());
         addColorButton.setOnClickListener(localButtonListener);
 
+        CancelButtoniListener cancelListener = new CancelButtoniListener(redSlider, greenSlider, blueSlider, lightTypeSpinner, frequencySpinner, numLEDSpinner, colorButtons, bluetoothMessage);
+        cancelButton.setOnClickListener(cancelListener);
+
         /* send configuration to rpi button configuration */
-        SendToRPIButtonListener localSendListener = new SendToRPIButtonListener(outputStream, inStream);
+        SendToRPIButtonListener localSendListener = new SendToRPIButtonListener(outputStream, inStream, bluetoothMessage, lightTypeSpinner, numLEDSpinner, frequencySpinner);
         sendToRPIButton.setOnClickListener(localSendListener);
 
         /* spinner (dropdown) configuration */
@@ -134,7 +146,7 @@ public class MainActivity extends AppCompatActivity
                     Object[] devices = (Object []) bondedDevices.toArray();                 // cast this list to an indexable array
                     BluetoothDevice device = (BluetoothDevice) devices[raspberryPiIndex];   // get the specific desired index of the paired bluetooth device (in this case, 6)
                     ParcelUuid[] uuids = device.getUuids();                                 // get the bluetooth UUID from the device
-                    socket = device.createRfcommSocketToServiceRecord(uuids[0].getUuid());  // then use this UUID to initialize the global bluetooth socket
+                    socket = device.createInsecureRfcommSocketToServiceRecord(uuids[0].getUuid());  // then use this UUID to initialize the global bluetooth socket
                     socket.connect();                                                       // connect the socket
                     outputStream = socket.getOutputStream();                                // initialize the output stream
                     inStream = socket.getInputStream();                                     // initialize the input stream

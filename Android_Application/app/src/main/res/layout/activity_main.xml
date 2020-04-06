@@ -8,11 +8,11 @@
 
     <Spinner
         android:id="@+id/lightType"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginTop="112dp"
+        android:layout_width="320dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addColorButton" />
 
@@ -20,9 +20,9 @@
         android:id="@+id/seekBarRed"
         android:layout_width="313dp"
         android:layout_height="16dp"
-        android:layout_marginStart="49dp"
-        android:layout_marginLeft="49dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
         android:max="255"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,9 +31,9 @@
         android:id="@+id/seekBarGreen"
         android:layout_width="313dp"
         android:layout_height="16dp"
-        android:layout_marginStart="49dp"
-        android:layout_marginLeft="49dp"
-        android:layout_marginTop="42dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
         android:max="255"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seekBarRed" />
@@ -42,19 +42,19 @@
         android:id="@+id/seekBarBlue"
         android:layout_width="313dp"
         android:layout_height="16dp"
-        android:layout_marginStart="49dp"
-        android:layout_marginLeft="49dp"
-        android:layout_marginTop="38dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
         android:max="255"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seekBarGreen" />
 
     <Button
         android:id="@+id/addColorButton"
-        android:layout_width="313dp"
+        android:layout_width="150dp"
         android:layout_height="48dp"
-        android:layout_marginStart="49dp"
-        android:layout_marginLeft="49dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="31dp"
         android:text="ADD COLOR"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,20 +62,20 @@
 
     <Spinner
         android:id="@+id/numberLEDs"
-        android:layout_width="409dp"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="36dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frequencySpinner" />
 
     <Spinner
         android:id="@+id/frequencySpinner"
-        android:layout_width="409dp"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="36dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lightType" />
@@ -115,13 +115,64 @@
 
     <Button
         android:id="@+id/sendToRPI"
-        android:layout_width="197dp"
+        android:layout_width="150dp"
         android:layout_height="47dp"
-        android:layout_marginStart="107dp"
-        android:layout_marginLeft="107dp"
-        android:layout_marginTop="19dp"
-        android:text="Button"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="32dp"
+        android:text="SEND TO DEVICE"
+        app:layout_constraintStart_toEndOf="@+id/addColorButton"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarBlue" />
+
+    <Button
+        android:id="@+id/color1"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addColorButton" />
+        app:layout_constraintTop_toBottomOf="@+id/numberLEDs" />
+
+    <Button
+        android:id="@+id/color2"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toEndOf="@+id/color1"
+        app:layout_constraintTop_toBottomOf="@+id/numberLEDs" />
+
+    <Button
+        android:id="@+id/color3"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toEndOf="@+id/color2"
+        app:layout_constraintTop_toBottomOf="@+id/numberLEDs" />
+
+    <Button
+        android:id="@+id/color4"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toEndOf="@+id/color3"
+        app:layout_constraintTop_toBottomOf="@+id/numberLEDs" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="345dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="13dp"
+        android:text="RESET CONFIG"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/color1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
