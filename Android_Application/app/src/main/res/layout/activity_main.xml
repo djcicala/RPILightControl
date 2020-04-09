@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Blue"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarBlue"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Spinner
         android:id="@+id/lightType"
         android:layout_width="320dp"
@@ -109,7 +119,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="7dp"
-        android:text="Number of LEDs (for shift)"
+        android:text="Number of LEDs"
         app:layout_constraintBottom_toTopOf="@+id/numberLEDs"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -117,12 +127,12 @@
         android:id="@+id/sendToRPI"
         android:layout_width="150dp"
         android:layout_height="47dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="184dp"
+        android:layout_marginLeft="184dp"
+        android:layout_marginTop="15dp"
         android:text="SEND TO DEVICE"
-        app:layout_constraintStart_toEndOf="@+id/addColorButton"
-        app:layout_constraintTop_toBottomOf="@+id/seekBarBlue" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/color3" />
 
     <Button
         android:id="@+id/color1"
@@ -130,7 +140,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/numberLEDs" />
 
@@ -140,7 +150,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toEndOf="@+id/color1"
         app:layout_constraintTop_toBottomOf="@+id/numberLEDs" />
 
@@ -150,7 +160,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toEndOf="@+id/color2"
         app:layout_constraintTop_toBottomOf="@+id/numberLEDs" />
 
@@ -160,19 +170,50 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toEndOf="@+id/color3"
         app:layout_constraintTop_toBottomOf="@+id/numberLEDs" />
 
     <Button
         android:id="@+id/cancelButton"
-        android:layout_width="345dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="13dp"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="31dp"
         android:text="RESET CONFIG"
+        app:layout_constraintStart_toEndOf="@+id/addColorButton"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarBlue" />
+
+    <Button
+        android:id="@+id/connectButton"
+        android:layout_width="150dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:text="CONNECT"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/color1" />
+
+    <TextView
+        android:id="@+id/Red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Red"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarRed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Green"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarGreen"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

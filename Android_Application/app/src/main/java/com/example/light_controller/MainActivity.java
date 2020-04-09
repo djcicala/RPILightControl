@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     Button   sendToRPIButton;                  // button to send the data over bluetooth to the raspberry pi
     Button[] colorButtons = new Button[4];     // list of buttons to assign colors to
     Button   cancelButton;                     // button to clear the current configuration
+    Button   connectButton;                    // button to establish connection to a bluetooth device
 
     /* bluetooth communication objects */
     BluetoothMessageClass bluetoothMessage;   // container class to store all of the relevant fields of the bluetooth message
@@ -78,20 +82,21 @@ public class MainActivity extends AppCompatActivity
         colorButtons[2] = (Button) findViewById(R.id.color3);
         colorButtons[3] = (Button) findViewById(R.id.color4);
         cancelButton    = (Button) findViewById(R.id.cancelButton);
+        connectButton   = (Button) findViewById(R.id.connectButton);
 
 
         /* create a new instance of the bluetooth message on startup */
         bluetoothMessage = new BluetoothMessageClass();
 
         /* bluetooth module setup */
-        try
-        {
-            BluetoothInit();
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
+        //try
+        //{
+        //    BluetoothInit();
+        //}
+        //catch(IOException e)
+        //{
+        //    e.printStackTrace();
+        //}
 
         /* color picker configuration */
         SeekBarListener localSeekBarListener = new SeekBarListener(addColorButton, redSlider, greenSlider, blueSlider);
@@ -106,9 +111,9 @@ public class MainActivity extends AppCompatActivity
         CancelButtoniListener cancelListener = new CancelButtoniListener(redSlider, greenSlider, blueSlider, lightTypeSpinner, frequencySpinner, numLEDSpinner, colorButtons, bluetoothMessage);
         cancelButton.setOnClickListener(cancelListener);
 
-        /* send configuration to rpi button configuration */
-        SendToRPIButtonListener localSendListener = new SendToRPIButtonListener(outputStream, inStream, bluetoothMessage, lightTypeSpinner, numLEDSpinner, frequencySpinner);
-        sendToRPIButton.setOnClickListener(localSendListener);
+        ConnectButtonListener connectListener = new ConnectButtonListener(this, this);
+        connectButton.setOnClickListener(connectListener);
+        connectButton.setBackgroundColor(Color.rgb(255,0,0));
 
         /* spinner (dropdown) configuration */
         ArrayAdapter<CharSequence> lightTypeAdapter = ArrayAdapter.createFromResource(this, R.array.light_options, android.R.layout.simple_spinner_dropdown_item);
@@ -129,7 +134,7 @@ public class MainActivity extends AppCompatActivity
     /*  Note:          Based on eleven's post on Stack Overflow:             */
     /*                 https://stackoverflow.com/a/22899728                  */
     /*************************************************************************/
-    private void BluetoothInit() throws IOException
+    private void BluetoothInit(int index) throws IOException
     {
         BluetoothAdapter blueAdapter = BluetoothAdapter.getDefaultAdapter();
         if (blueAdapter != null)
@@ -144,7 +149,7 @@ public class MainActivity extends AppCompatActivity
                 { // there are some bonded devices to this phone
 
                     Object[] devices = (Object []) bondedDevices.toArray();                 // cast this list to an indexable array
-                    BluetoothDevice device = (BluetoothDevice) devices[raspberryPiIndex];   // get the specific desired index of the paired bluetooth device (in this case, 6)
+                    BluetoothDevice device = (BluetoothDevice) devices[index];              // get the specific desired index of the paired bluetooth device (in this case, 6)
                     ParcelUuid[] uuids = device.getUuids();                                 // get the bluetooth UUID from the device
                     socket = device.createInsecureRfcommSocketToServiceRecord(uuids[0].getUuid());  // then use this UUID to initialize the global bluetooth socket
                     socket.connect();                                                       // connect the socket
@@ -160,6 +165,38 @@ public class MainActivity extends AppCompatActivity
             else
             {
                 Log.e("error", "Bluetooth is disabled.");
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+    {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if(requestCode == 0)
+        {
+            try
+            {
+                int index = intent.getIntExtra("deviceID", 0);
+                try
+                {
+                    this.BluetoothInit(index);
+                    connectButton.setBackgroundColor(Color.rgb(0,255,0));
+                    connectButton.setText("CONNECTED");
+
+                    /* send configuration to rpi button configuration */
+                    SendToRPIButtonListener localSendListener = new SendToRPIButtonListener(outputStream, inStream, bluetoothMessage, lightTypeSpinner, numLEDSpinner, frequencySpinner, this.getApplicationContext(), connectButton);
+                    sendToRPIButton.setOnClickListener(localSendListener);
+
+                }
+                catch (IOException e)
+                {
+                    Toast.makeText(this, "Could not connect to device, please try again", Toast.LENGTH_LONG).show();
+                }
+            }
+            catch(NullPointerException e)
+            {
+                Toast.makeText(this, "Warning: No device selected", Toast.LENGTH_LONG).show();
             }
         }
     }

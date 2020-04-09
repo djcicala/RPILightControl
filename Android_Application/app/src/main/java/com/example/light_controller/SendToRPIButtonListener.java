@@ -8,9 +8,12 @@
 package com.example.light_controller;
 
 /******************************* imports *********************************/
+import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,13 +25,15 @@ public class SendToRPIButtonListener implements Button.OnClickListener
     OutputStream os;  // output bluetooth stream, sent over from the main activity
     InputStream  is;  // input bluetooth stream, also sent over from the main activity
 
-    final int BUFFER_SIZE = 1024;           // maximum return string size
+    final int BUFFER_SIZE = 3;              // maximum return string size
     byte[] buffer = new byte[BUFFER_SIZE];  // byte buffer for reading from the bluetooth bus
     BluetoothMessageClass bluetoothMessage; // message to send to the raspberry pi
     Spinner lightType, numLEDs, frequency;
+    Context context;
+    Button connectButton;
 
     /* class constructor. Creates local copies of the input and output streams. */
-    public SendToRPIButtonListener(OutputStream os, InputStream is, BluetoothMessageClass bluetoothMessage, Spinner lightType, Spinner numLEDs, Spinner frequency)
+    public SendToRPIButtonListener(OutputStream os, InputStream is, BluetoothMessageClass bluetoothMessage, Spinner lightType, Spinner numLEDs, Spinner frequency, Context context, Button connectButton)
     {
         this.os = os;
         this.is = is;
@@ -37,6 +42,9 @@ public class SendToRPIButtonListener implements Button.OnClickListener
         this.lightType = lightType;
         this.numLEDs   = numLEDs;
         this.frequency = frequency;
+        this.context   = context;
+
+        this.connectButton = connectButton;
     }
 
     /* this function gets called when the button is pressed  */
@@ -51,10 +59,21 @@ public class SendToRPIButtonListener implements Button.OnClickListener
 
             bluetoothMessage.ConstructCSVStr();
             this.write(bluetoothMessage.stringToTransmit);
+            this.read();
+
+            String temp = new String(buffer);
+            if(temp.equals("ACK"))
+            {
+                Toast.makeText(context, "Message successfully transmitted.", Toast.LENGTH_LONG).show();
+            }
+            this.bluetoothMessage = new BluetoothMessageClass();
         }
         /* error handling */
         catch(IOException e)
         {
+            Toast.makeText(context, "Connection terminated. Please reconnect!", Toast.LENGTH_LONG).show();
+            connectButton.setText("CONNECT");
+            connectButton.setBackgroundColor(Color.rgb(255,0,0));
             e.printStackTrace();
         }
     }
@@ -71,8 +90,8 @@ public class SendToRPIButtonListener implements Button.OnClickListener
     {
         int bytes = 0;
         int b = BUFFER_SIZE;
-        while (true)
-        {
+        //while (true)
+        //{
             try
             {
                 bytes = is.read(buffer, bytes, BUFFER_SIZE - bytes);
@@ -82,6 +101,6 @@ public class SendToRPIButtonListener implements Button.OnClickListener
             {
                 e.printStackTrace();
             }
-        }
+       // }
     }
 }
