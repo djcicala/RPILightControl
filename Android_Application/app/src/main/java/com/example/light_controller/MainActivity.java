@@ -88,28 +88,18 @@ public class MainActivity extends AppCompatActivity
         /* create a new instance of the bluetooth message on startup */
         bluetoothMessage = new BluetoothMessageClass();
 
-        /* bluetooth module setup */
-        //try
-        //{
-        //    BluetoothInit();
-        //}
-        //catch(IOException e)
-        //{
-        //    e.printStackTrace();
-        //}
-
         /* color picker configuration */
         SeekBarListener localSeekBarListener = new SeekBarListener(addColorButton, redSlider, greenSlider, blueSlider);
         redSlider.setOnSeekBarChangeListener(localSeekBarListener);
         greenSlider.setOnSeekBarChangeListener(localSeekBarListener);
         blueSlider.setOnSeekBarChangeListener(localSeekBarListener);
 
+        CancelButtoniListener cancelListener = new CancelButtoniListener(redSlider, greenSlider, blueSlider, lightTypeSpinner, frequencySpinner, numLEDSpinner, colorButtons, bluetoothMessage);
+        cancelButton.setOnClickListener(cancelListener);
+
         /* add color button press configuration  */
         AddColorButtonListener localButtonListener = new AddColorButtonListener(redSlider, greenSlider, blueSlider, bluetoothMessage, colorButtons, this.getApplicationContext());
         addColorButton.setOnClickListener(localButtonListener);
-
-        CancelButtoniListener cancelListener = new CancelButtoniListener(redSlider, greenSlider, blueSlider, lightTypeSpinner, frequencySpinner, numLEDSpinner, colorButtons, bluetoothMessage);
-        cancelButton.setOnClickListener(cancelListener);
 
         ConnectButtonListener connectListener = new ConnectButtonListener(this, this);
         connectButton.setOnClickListener(connectListener);
@@ -185,8 +175,9 @@ public class MainActivity extends AppCompatActivity
                     connectButton.setText("CONNECTED");
 
                     /* send configuration to rpi button configuration */
-                    SendToRPIButtonListener localSendListener = new SendToRPIButtonListener(outputStream, inStream, bluetoothMessage, lightTypeSpinner, numLEDSpinner, frequencySpinner, this.getApplicationContext(), connectButton);
+                    SendToRPIButtonListener localSendListener = new SendToRPIButtonListener(outputStream, inStream, bluetoothMessage, lightTypeSpinner, numLEDSpinner, frequencySpinner, this.getApplicationContext(), connectButton, colorButtons);
                     sendToRPIButton.setOnClickListener(localSendListener);
+                    bluetoothMessage = new BluetoothMessageClass();
 
                 }
                 catch (IOException e)

@@ -59,9 +59,6 @@ public class AddColorButtonListener implements Button.OnClickListener
             this.redSeekBar.setProgress(0);
             this.greenSeekBar.setProgress(0);
             this.blueSeekBar.setProgress(0);
-
         }
-
-
     }
 }

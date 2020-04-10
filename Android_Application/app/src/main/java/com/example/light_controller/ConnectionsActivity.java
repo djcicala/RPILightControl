@@ -2,6 +2,7 @@ package com.example.light_controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,12 +11,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ConnectionsActivity extends AppCompatActivity {
 
     ListView connectionsList;
     ListAdapter adapter;
     Intent intent;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -25,9 +28,11 @@ public class ConnectionsActivity extends AppCompatActivity {
 
         connectionsList = (ListView) findViewById(R.id.bluetoothConnections);
 
+        this.context = getApplicationContext();
+
         intent = getIntent();
-        String[] addresses = intent.getStringArrayExtra("addresses");
-        String[] names     = intent.getStringArrayExtra("names");
+        final String[] addresses = intent.getStringArrayExtra("addresses");
+        final String[] names     = intent.getStringArrayExtra("names");
 
         adapter = new ListViewArrayAdapter(this.getApplicationContext(), addresses, names);
         connectionsList.setAdapter(adapter);
@@ -35,11 +40,18 @@ public class ConnectionsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                intent.putExtra("deviceID", position);
-                setResult(0,intent);
-                finish();
+                // dont click on something illegal
+                if(position > addresses.length)
+                {
+                    Toast.makeText(context, "Incorrect device selected!", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    intent.putExtra("deviceID", position);
+                    setResult(0,intent);
+                    finish();
+                }
             }
-
         });
     }
 }

@@ -32,6 +32,17 @@ public class BluetoothMessageClass
         //ConstructCSVStr();
     }
 
+    public void ClearMessage()
+    {
+        this.colors = new ArrayList<ColorStruct>();
+        this.numLEDs   = 0;
+        this.numColors = 0;
+        this.frequency = 0;
+
+        this.lightType = "Solid";
+        this.stringToTransmit = "";
+    }
+
     /* adds an RGB color to the list of colors */
     public void AddColor(int r, int g, int b)
     {

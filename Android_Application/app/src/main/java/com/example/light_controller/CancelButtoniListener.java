@@ -41,7 +41,7 @@ public class CancelButtoniListener implements View.OnClickListener
     @Override
     public void onClick(View v)
     {
-        this.bluetoothMessage = new BluetoothMessageClass();
+        this.bluetoothMessage.ClearMessage();
 
         this.redSlider.setProgress(0);
         this.greenSlider.setProgress(0);
@@ -55,6 +55,5 @@ public class CancelButtoniListener implements View.OnClickListener
         this.color2.setBackgroundColor(Color.rgb(211,211,211));
         this.color3.setBackgroundColor(Color.rgb(211,211,211));
         this.color4.setBackgroundColor(Color.rgb(211,211,211));
-
     }
 }

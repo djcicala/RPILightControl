@@ -31,9 +31,10 @@ public class SendToRPIButtonListener implements Button.OnClickListener
     Spinner lightType, numLEDs, frequency;
     Context context;
     Button connectButton;
+    Button[] colorButtons = new Button[4];
 
     /* class constructor. Creates local copies of the input and output streams. */
-    public SendToRPIButtonListener(OutputStream os, InputStream is, BluetoothMessageClass bluetoothMessage, Spinner lightType, Spinner numLEDs, Spinner frequency, Context context, Button connectButton)
+    public SendToRPIButtonListener(OutputStream os, InputStream is, BluetoothMessageClass bluetoothMessage, Spinner lightType, Spinner numLEDs, Spinner frequency, Context context, Button connectButton, Button[] colorButtons)
     {
         this.os = os;
         this.is = is;
@@ -45,6 +46,7 @@ public class SendToRPIButtonListener implements Button.OnClickListener
         this.context   = context;
 
         this.connectButton = connectButton;
+        this.colorButtons  = colorButtons;
     }
 
     /* this function gets called when the button is pressed  */
@@ -66,7 +68,6 @@ public class SendToRPIButtonListener implements Button.OnClickListener
             {
                 Toast.makeText(context, "Message successfully transmitted.", Toast.LENGTH_LONG).show();
             }
-            this.bluetoothMessage = new BluetoothMessageClass();
         }
         /* error handling */
         catch(IOException e)
